@@ -1,0 +1,39 @@
+Database schema for a bookstore management system:
+There are Five tables in Schema.
+1. Books table contains book_id (primary key), title, author_id (foreign key referencing Authors table), price, quantity_available
+INSERT INTO Books (book_id, title, author_id, price, quantity_available)
+VALUES (1, 'Harry Potter and the Sorcerer''s Stone', 1, 10.99, 100),
+       (2, '1984', 2, 8.99, 75),
+       (3, 'Pride and Prejudice', 3, 6.99, 120);
+2. Authors table contains author_id (primary key), author_name
+INSERT INTO Authors (author_id, author_name)
+VALUES (1, 'J.K. Rowling'),
+       (2, 'George Orwell'),
+       (3, 'Jane Austen');
+3. Customers table contains customer_id (primary key), customer_name, email, phone
+INSERT INTO Customers (customer_id, customer_name, email, phone)
+VALUES (1, 'John Doe', 'john.doe@example.com', '123-456-7890'),
+       (2, 'Jane Smith', 'jane.smith@example.com', '987-654-3210');
+4. Orders table contains order_id (primary key), customer_id (foreign key referencing Customers table), order_date, total_amount
+INSERT INTO Orders (order_id, customer_id, order_date, total_amount)
+VALUES (1, 1, '2024-02-13', 45.96),
+       (2, 2, '2024-02-12', 23.97);
+5. OrderDetails table contains order_detail_id (primary key), order_id (foreign key referencing Orders table), book_id (foreign key referencing Books table), quantity, subtotal
+INSERT INTO OrderDetails (order_detail_id, order_id, book_id, quantity, subtotal)
+VALUES (1, 1, 1, 2, 21.98),
+       (2, 1, 2, 1, 8.99),
+       (3, 2, 3, 3, 20.97);
+
+SQL queries to retrieve a list of top-selling books: 
+SELECT b.title, SUM(od.quantity) AS total_sold
+FROM Books b
+JOIN OrderDetails od ON b.book_id = od.book_id
+GROUP BY b.title
+ORDER BY total_sold DESC
+LIMIT n; 
+
+SQL queries to Calculate total sales revenue for a given period:
+SELECT SUM(o.total_amount) AS total_revenue
+FROM Orders o
+WHERE o.order_date BETWEEN 'start_date' AND 'end_date';
+Replace 'start_date' and 'end_date' with the specific dates you want to calculate the total revenue for.
